@@ -1,0 +1,23 @@
+{
+  "name": "ykkdbposting-cli",
+  "version": "1.0.0",
+  "description": "Command Line Tool to posting daily sale",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "commander": "^9.4.0",
+    "csv-parse": "^5.3.0",
+    "csv-parser": "^3.0.0",
+    "csv-stringify": "^6.2.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.0.2",
+    "inquirer": "^9.1.2",
+    "msnodesqlv8": "^2.6.0",
+    "mssql": "^9.0.1"
+  }
+}
