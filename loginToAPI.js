@@ -35,14 +35,3 @@ const updateToken = async () => {
 }
 
 module.exports = updateToken;
-
-// const main = async () => {
-//    await updateToken();
-// }
-
-// main()
-//     .then( () => process.exit(0))
-//     .catch(error => {
-//         console.log(error);
-//         process.exit(1);
-//     });

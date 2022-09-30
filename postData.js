@@ -48,7 +48,7 @@ const PostData = async (_grossSale,
       
      await axios.request(options).then(function (response) {
         console.log(response.data.message);
-        await writeLog("logs/op.log", `\nSUCCE: ${response.data.message }` + toDateFM.getFullDateTime()) 
+        writeLog("logs/op.log", `\nSUCCE: ${response.data.message }` + toDateFM.getFullDateTime()) 
 
       }).catch(function (error) {
         console.error(error.response.status, error.response.statusText, error.response.data.message);
