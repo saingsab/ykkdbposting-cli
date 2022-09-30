@@ -1,58 +1,69 @@
-const csv = require('csv-parser');
+const CSVToJSON = require('csvtojson');
 const fs = require('fs');
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const ToDateFM = require("./toDateFM");
-// const postData = require("./postData");
+const postData = require("./postData");
 
 const writeLog = async (local, text) => {
-  await fs.appendFile(local.toString(), text.toString(), function (err) {
+   fs.appendFileSync(local.toString(), text.toString(), function (err) {
         if (err) return console.log(err);
   })
 }
 
-const csvWriter = createCsvWriter({
-  path: `${ToDateFM.getOnlyDate()}.csv`,
-  header: [
-      {id: 'PersonID', title: 'PersonID'},
-      {id: 'LastName', title: 'LastName'},
-      {id: 'FirstName', title: 'FirstName'},
-      {id: 'Address', title: 'Address'},
-      {id: 'City', title: 'City'},
-  ]
-});
+const backupTrx = async () => {
+  try {
+    fs.copyFileSync('dbcsv/out.csv', `dbcsv/${ToDateFM.getOnlyDate()}.csv`);
+    writeLog('logs/op.log', `\nSUCCE: Data was copied to new destination ${ToDateFM.getOnlyDate()}`);
+    console.log('Data was copied to new destination');
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+
+var tx = [];
 
 const postDailyTransaction = async () => {
-
-    await fs.copyFile('dbcsv/out.csv', `dbcsv/${ToDateFM.getOnlyDate()}.csv`, (err) => {
-      if (err) throw err;
-      console.log('Data was copied to new destination');
-      //writeLog("logs/op.log", "\nERROR: Data was copied to new destination : " + toDateFM.getFullDateTime()); 
-    })
-    await writeLog("logs/op.log", `\nSUCCE: Data was copied to new destination ${ToDateFM.getOnlyDate()}`);
-
-  //  await fs.copyFile('dbcsv/out.csv', `dbcsv/${ToDateFM.getOnlyDate()}.csv`, (err) => {
-  //   if (err) throw err;
-  //   writeLog("logs/op.log", "\nSUCCE: Data was copied to new destination : " + toDateFM.getFullDateTime()) 
-  //   console.log('Data was copied to new destination');
-  // });
   
-  // var db = [];
-  
-  // fs.createReadStream('dbcsv/out.csv')
-  //   .pipe(csv())
-  //   .on('data', (row) => {
-  //     db.push(row);
-  //     // console.log(row);
-  //   })
-  //   .on('end', () => {
-  //     // CAll API Posting here
-  //     console.log("Start posting data ...")
-  //     // await postData.postData();
-  //     console.log(db[0].LastName)
-  //     writeLog("logs/op.log", "\nSUCCE: Successfully Posted Transaction to API Server : " + toDateFM.getFullDateTime()) 
-  //     console.log('Successfully Posted Transaction to API Server');
-  //   });
-}
+  await CSVToJSON().fromFile('dbcsv/out.csv')
+  .then(_tx => {
+    tx.push(_tx[0]);
+  }).catch(err => {
+      console.log(err);
+  });
+  console.log("Backup transaction ...")
+  await backupTrx();
+
+  console.log("Start posting data ...")
+  await postData(
+    tx.grossSale,
+    tx.taxAmount,
+    tx.netSale,
+    tx.cashAmount,
+    tx.creditCardAmount,
+    tx.otherAmount,
+    tx.totalCreditCardTransaction,
+    tx.totalTransaction,
+    tx.depositAmountUsd,
+    tx.depositAmountRiel,
+    4000, //exchange rates
+    "String"
+  )
+}  
+// mallName: `${process.env.mallName}`,
+// tenantName: `${process.env.tenantName}`,
+// date: '2022-09-09', //toDateFM.getOnlyDate() To be chang on the production
+// grossSale: _grossSale,
+//           taxAmount: _taxAmount,
+//           netSale: _netSale,
+//           cashAmount: _cashAmount,
+//           creditCardAmount: _creditCardAmount,
+//           otherAmount: _otherAmount,
+//           totalCreditCardTransaction: _totalCreditCardTransaction,
+//           totalTransaction: _totalTransaction,
+//           depositAmountUsd: _depositAmountUsd,
+//           depositAmountRiel: _depositAmountRiel,
+//           exchangeRate: _exchangeRate,
+//           posId: _posId
 
 const main = async () => {
     await  postDailyTransaction();

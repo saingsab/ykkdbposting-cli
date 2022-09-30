@@ -25,7 +25,7 @@ const updateToken = async () => {
         token: await loginToAPI()
     }
 
-    await fs.writeFileSync (`${process.env.TOKENS}`, JSON.stringify(newToken), err => {
+    fs.writeFileSync (`${process.env.TOKENS}`, JSON.stringify(newToken), err => {
      
         // Checking for errors
         if (err) throw err; 
@@ -34,4 +34,4 @@ const updateToken = async () => {
     });
 }
 
-module.exports = updateToken;
+module.exports = { updateToken };

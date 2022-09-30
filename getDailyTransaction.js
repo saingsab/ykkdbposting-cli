@@ -58,15 +58,5 @@ const  getDailyTransaction = async (_currentDB, _toDate) => {
           sql.close()
       }
 }
-// const main = async () => {
-//     await writeFromDB();
-// }
-
-// main()
-//     .then( () => process.exit(0))
-//     .catch(error => {
-//         console.log(error);
-//         process.exit(1);
-//     });
 
 module.exports = {getDailyTransaction};

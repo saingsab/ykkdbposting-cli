@@ -1,11 +1,15 @@
 require("dotenv").config();
 const axios = require("axios").default;
+const fs = require('fs');
 const toDateFM = require("./toDateFM");
+const loginToAPI = require("./loginToAPI");
+const tokens = require("./tokens");
 
 const writeLog = async (local, text) => {
-    await fs.appendFile(local.toString(), text.toString(), function (err) {
-          if (err) return console.log(err);
-})
+  fs.appendFileSync(local.toString(), text.toString(), function (err) {
+       if (err) return console.log(err);
+ })
+}
 
 const PostData = async (_grossSale,
                         _taxAmount, 
@@ -18,19 +22,18 @@ const PostData = async (_grossSale,
                         _depositAmountUsd, 
                         _depositAmountRiel, 
                         _exchangeRate,  
-                        _posId,
-                        _token) => {
+                        _posId) => {
     var options = {
         method: 'POST',
         url: `${process.env.APIURLPOSTDATA}`,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${_token}`
+          Authorization: `Bearer ${tokens.token}`
         },
         data: {
           mallName: `${process.env.mallName}`,
           tenantName: `${process.env.tenantName}`,
-          date: '2022-09-09', //toDateFM.getOnlyDate() To be chang on the production
+          date: '2022-09-12', //toDateFM.getOnlyDate() To be chang on the production
           grossSale: _grossSale,
           taxAmount: _taxAmount,
           netSale: _netSale,
@@ -45,17 +48,29 @@ const PostData = async (_grossSale,
           posId: _posId
         }
       };
-      
+     await loginToAPI.updateToken();
+     console.log("Updating Access Token ...")
      await axios.request(options).then(function (response) {
+       
+        writeLog("logs/op.log", `\nSUCCE: ${response.data.message } ` + toDateFM.getFullDateTime());
         console.log(response.data.message);
-        writeLog("logs/op.log", `\nSUCCE: ${response.data.message }` + toDateFM.getFullDateTime()) 
 
       }).catch(function (error) {
-        console.error(error.response.status, error.response.statusText, error.response.data.message);
-        await writeLog("logs/op.log", `\nERROR: ${error.response.status, error.response.statusText, error.response.data.message }` + toDateFM.getFullDateTime()); 
-
+        // console.error(error);
+         writeLog("logs/op.log", `\nERROR: ${error.response.status, error.response.statusText, error.response.data.message } ` + toDateFM.getFullDateTime()); 
+         console.error(error.response.status, error.response.statusText, error.response.data.message);
       });
-    }
 }
 
 module.exports = PostData;
+// const main = async () => {
+//   await  PostData();
+//   // await  readCSV();
+// }
+
+// main()
+//   .then( () => process.exit(0))
+//   .catch(error => {
+//       console.log(error);
+//       process.exit(1);
+//   });
