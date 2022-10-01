@@ -11,7 +11,11 @@ const writeLog = async (local, text) => {
  })
 }
 
-const PostData = async (_grossSale,
+const PostData = async (
+                        _mallName,
+                        _tenantName,
+                        _date,
+                        _grossSale,
                         _taxAmount, 
                         _netSale, 
                         _cashAmount, 
@@ -31,9 +35,9 @@ const PostData = async (_grossSale,
           Authorization: `Bearer ${tokens.token}`
         },
         data: {
-          mallName: `${process.env.mallName}`,
-          tenantName: `${process.env.tenantName}`,
-          date: '2022-09-12', //toDateFM.getOnlyDate() To be chang on the production
+          mallName: _mallName,// `${process.env.mallName}`,
+          tenantName: _tenantName, // `${process.env.tenantName}`,
+          date: _date, //'2022-09-12', //toDateFM.getOnlyDate() To be chang on the production
           grossSale: _grossSale,
           taxAmount: _taxAmount,
           netSale: _netSale,

@@ -7,6 +7,8 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const toDateFM = require("./toDateFM");
 const date = require("date-and-time");
 
+sql.map.register(Date, sql.Date);
+
 sql.on('error', err => {
     console.log(err.message)
 })
@@ -33,18 +35,22 @@ const csvWriter = createCsvWriter({
     ]
   });
 
-const  getDailyTransaction = async (_currentDB, _toDate) => {
+const  getDailyTransaction = async (_currentDB, _txDate) => {
+    // let _txDate = new Date(txDate);
     try {
         // Make a copy first 
+          
           let pool = await sql.connect(config)
           /*use TLJAEON1 
           exec SP_DAILY_TRX 
           @TX_DATE = '2019-06-04'*/
           // Select DB
           // let _currentDB = "TLJAEON1";
-          // let _toDate  =  "2019-06-04";
           await pool.request().query(`use ${_currentDB}`);
-          let result1 = await pool.request().query(`exec SP_DAILY_TRX @TX_DATE = "${_toDate}"`);
+          let result1 = await pool.request()
+                                  .input('ST_DATE', sql.DateTime, _txDate)
+                                  // .output('grossSale', sql.Money)
+                                  .execute(`SP_DAILY_TRX`)
           let log = await writeLog("logs/op.log", "\nSUCCE: FN writeFromDB : " + toDateFM.getFullDateTime()) 
           console.log(result1.recordset[0])
   
@@ -60,3 +66,14 @@ const  getDailyTransaction = async (_currentDB, _toDate) => {
 }
 
 module.exports = {getDailyTransaction};
+
+// const main = async () => {
+//     await getDailyTransaction("TLJAEON1", "2019-12-14");
+// }
+
+// main()
+//     .then( () => process.exit(0))
+//     .catch(error => {
+//         console.log(error);
+//         process.exit(1);
+//     });

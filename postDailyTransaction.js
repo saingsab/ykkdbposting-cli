@@ -2,6 +2,8 @@ const CSVToJSON = require('csvtojson');
 const fs = require('fs');
 const ToDateFM = require("./toDateFM");
 const postData = require("./postData");
+const getDailyTransaction = require("./getDailyTransaction");
+const date = require('date-and-time')
 
 const writeLog = async (local, text) => {
    fs.appendFileSync(local.toString(), text.toString(), function (err) {
@@ -22,8 +24,7 @@ const backupTrx = async () => {
 
 var tx = [];
 
-const postDailyTransaction = async () => {
-  
+const postDailyTransaction = async (_storeName, _txDate, _mallName, _tenantName) => {
   await CSVToJSON().fromFile('dbcsv/out.csv')
   .then(_tx => {
     tx.push(_tx[0]);
@@ -33,8 +34,14 @@ const postDailyTransaction = async () => {
   console.log("Backup transaction ...")
   await backupTrx();
 
+  console.log(`Pulling data from ${_storeName} on ${_txDate} transaction ... `)
+  await getDailyTransaction.getDailyTransaction(_storeName, _txDate);
+
   console.log("Start posting data ...")
   await postData(
+    _mallName,
+    _tenantName,
+    _txDate,
     tx.grossSale,
     tx.taxAmount,
     tx.netSale,
@@ -45,8 +52,8 @@ const postDailyTransaction = async () => {
     tx.totalTransaction,
     tx.depositAmountUsd,
     tx.depositAmountRiel,
-    4000, //exchange rates
-    "String"
+    tx.exchangeRate,
+    "String" //Current value is String
   )
 }  
 // mallName: `${process.env.mallName}`,
@@ -65,15 +72,15 @@ const postDailyTransaction = async () => {
 //           exchangeRate: _exchangeRate,
 //           posId: _posId
 
-const main = async () => {
-    await  postDailyTransaction();
-}
+// const main = async () => {
+//     await  postDailyTransaction();
+// }
 
-main()
-    .then( () => process.exit(0))
-    .catch(error => {
-        console.log(error);
-        process.exit(1);
-    });
+// main()
+//     .then( () => process.exit(0))
+//     .catch(error => {
+//         console.log(error);
+//         process.exit(1);
+//     });
 
-// module.exports = { postDailyTransaction };
+module.exports = { postDailyTransaction };
