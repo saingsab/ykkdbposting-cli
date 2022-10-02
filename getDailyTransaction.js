@@ -36,10 +36,7 @@ const csvWriter = createCsvWriter({
   });
 
 const  getDailyTransaction = async (_currentDB, _txDate) => {
-    // let _txDate = new Date(txDate);
     try {
-        // Make a copy first 
-          
           let pool = await sql.connect(config)
           /*use TLJAEON1 
           exec SP_DAILY_TRX 
@@ -51,7 +48,7 @@ const  getDailyTransaction = async (_currentDB, _txDate) => {
                                   .input('ST_DATE', sql.DateTime, _txDate)
                                   // .output('grossSale', sql.Money)
                                   .execute(`SP_DAILY_TRX`)
-          let log = await writeLog("logs/op.log", "\nSUCCE: FN writeFromDB : " + toDateFM.getFullDateTime()) 
+          let log = await writeLog("logs/op.log", "\nSUCCE: FN getDailyTransaction Pulling data from DB  : " + toDateFM.getFullDateTime()) 
           console.log(result1.recordset[0])
   
           await csvWriter

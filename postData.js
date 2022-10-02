@@ -27,6 +27,10 @@ const PostData = async (
                         _depositAmountRiel, 
                         _exchangeRate,  
                         _posId) => {
+
+    await loginToAPI.updateToken();
+    console.log("Updating Access Token ...")
+
     var options = {
         method: 'POST',
         url: `${process.env.APIURLPOSTDATA}`,
@@ -52,8 +56,6 @@ const PostData = async (
           posId: _posId
         }
       };
-     await loginToAPI.updateToken();
-     console.log("Updating Access Token ...")
      await axios.request(options).then(function (response) {
        
         writeLog("logs/op.log", `\nSUCCE: ${response.data.message } ` + toDateFM.getFullDateTime());

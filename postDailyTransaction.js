@@ -18,6 +18,7 @@ const backupTrx = async () => {
     console.log('Data was copied to new destination');
   }
   catch (err) {
+    writeLog('logs/op.log', `\nERROR: FN backupTrx Data was was not copied to new destination ${err } :  ${ToDateFM.getOnlyDate()}`);
     console.log(err);
   }
 }
@@ -56,31 +57,5 @@ const postDailyTransaction = async (_storeName, _txDate, _mallName, _tenantName)
     "String" //Current value is String
   )
 }  
-// mallName: `${process.env.mallName}`,
-// tenantName: `${process.env.tenantName}`,
-// date: '2022-09-09', //toDateFM.getOnlyDate() To be chang on the production
-// grossSale: _grossSale,
-//           taxAmount: _taxAmount,
-//           netSale: _netSale,
-//           cashAmount: _cashAmount,
-//           creditCardAmount: _creditCardAmount,
-//           otherAmount: _otherAmount,
-//           totalCreditCardTransaction: _totalCreditCardTransaction,
-//           totalTransaction: _totalTransaction,
-//           depositAmountUsd: _depositAmountUsd,
-//           depositAmountRiel: _depositAmountRiel,
-//           exchangeRate: _exchangeRate,
-//           posId: _posId
-
-// const main = async () => {
-//     await  postDailyTransaction();
-// }
-
-// main()
-//     .then( () => process.exit(0))
-//     .catch(error => {
-//         console.log(error);
-//         process.exit(1);
-//     });
 
 module.exports = { postDailyTransaction };
