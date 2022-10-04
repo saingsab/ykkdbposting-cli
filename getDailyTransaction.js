@@ -25,13 +25,15 @@ const csvWriter = createCsvWriter({
       {id: 'grossSale', title: 'grossSale'},
       {id: 'taxAmount', title: 'taxAmount'},
       {id: 'netSale', title: 'netSale'},
-      {id: 'cashAmount', title: 'cashAmount'},
+      {id: 'cashAmountUsd', title: 'cashAmountUsd'},
+      {id: 'cashAmountRiel', title: 'cashAmountRiel'},
       {id: 'creditCardAmount', title: 'creditCardAmount'},
       {id: 'otherAmount', title: 'otherAmount'},
       {id: 'totalCreditCardTransaction', title: 'totalCreditCardTransaction'},
       {id: 'totalTransaction', title: 'totalTransaction'},
       {id: 'depositAmountUsd', title: 'depositAmountUsd'},
       {id: 'depositAmountRiel', title: 'depositAmountRiel'},
+      {id: 'exchangeRate', title: 'exchangeRate'}
     ]
   });
 
@@ -45,7 +47,7 @@ const  getDailyTransaction = async (_currentDB, _txDate) => {
           // let _currentDB = "TLJAEON1";
           await pool.request().query(`use ${_currentDB}`);
           let result1 = await pool.request()
-                                  .input('ST_DATE', sql.DateTime, _txDate)
+                                  .input('TX_DATE', sql.DateTime, _txDate)
                                   // .output('grossSale', sql.Money)
                                   .execute(`SP_DAILY_TRX`)
           let log = await writeLog("logs/op.log", "\nSUCCE: FN getDailyTransaction Pulling data from DB  : " + toDateFM.getFullDateTime()) 

@@ -25,7 +25,7 @@ const backupTrx = async () => {
 
 var tx = [];
 
-const postDailyTransaction = async (_storeName, _txDate, _mallName, _tenantName) => {
+const postDailyTransaction = async (_storeName, _txDate, _mallName, _tenantName, _posId) => {
   await CSVToJSON().fromFile('dbcsv/out.csv')
   .then(_tx => {
     tx.push(_tx[0]);
@@ -46,7 +46,8 @@ const postDailyTransaction = async (_storeName, _txDate, _mallName, _tenantName)
     tx.grossSale,
     tx.taxAmount,
     tx.netSale,
-    tx.cashAmount,
+    tx.cashAmountUsd,
+    tx.cashAmountRiel,
     tx.creditCardAmount,
     tx.otherAmount,
     tx.totalCreditCardTransaction,
@@ -54,7 +55,7 @@ const postDailyTransaction = async (_storeName, _txDate, _mallName, _tenantName)
     tx.depositAmountUsd,
     tx.depositAmountRiel,
     tx.exchangeRate,
-    "String" //Current value is String
+    _posId
   )
 }  
 

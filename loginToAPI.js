@@ -19,10 +19,10 @@ var options = {
 
 const loginToAPI = async () => {
     let freshToken = await axios.request(options).then(function (response) {
-      writeLog('logs/op.log', `\nSUCCE: Successfully login to API Server:  ${ToDateFM.getOnlyDate()}`);
+      writeLog('logs/op.log', `\nSUCCE: Successfully login to API Server:  ${toDateFM.getOnlyDate()}`);
       return response.data.token;
       }).catch(function (error) {
-        writeLog('logs/op.log', `\nERROR: Failed to login to API Server: ${error}: ${ToDateFM.getOnlyDate()}`);
+        writeLog('logs/op.log', `\nERROR: Failed to login to API Server: ${error}: ${toDateFM.getOnlyDate()}`);
         console.error(error);
       });
 
