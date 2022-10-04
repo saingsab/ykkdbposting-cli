@@ -43,4 +43,4 @@ const updateToken = async () => {
     });
 }
 
-module.exports = { updateToken };
+module.exports = { loginToAPI, updateToken };

@@ -3,6 +3,7 @@ const fs = require('fs');
 const ToDateFM = require("./toDateFM");
 const postData = require("./postData");
 const getDailyTransaction = require("./getDailyTransaction");
+const loginToAPI = require('./loginToAPI');
 const date = require('date-and-time')
 
 const writeLog = async (local, text) => {
@@ -38,6 +39,10 @@ const postDailyTransaction = async (_storeName, _txDate, _mallName, _tenantName,
   console.log(`Pulling data from ${_storeName} on ${_txDate} transaction ... `)
   await getDailyTransaction.getDailyTransaction(_storeName, _txDate);
 
+  console.log(`Start login to API Server ...`);
+  let _accToken =  await loginToAPI.loginToAPI();
+  console.log("Updating Access Token ...");
+
   console.log("Start posting data ...")
   await postData(
     _mallName,
@@ -55,7 +60,8 @@ const postDailyTransaction = async (_storeName, _txDate, _mallName, _tenantName,
     tx.depositAmountUsd,
     tx.depositAmountRiel,
     tx.exchangeRate,
-    _posId
+    _posId,
+    _accToken
   )
 }  
 

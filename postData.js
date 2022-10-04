@@ -27,17 +27,15 @@ const PostData = async (
                         _depositAmountUsd, 
                         _depositAmountRiel, 
                         _exchangeRate,  
-                        _posId) => {
-
-    await loginToAPI.updateToken();
-    console.log("Updating Access Token ...")
+                        _posId,
+                        _accToken) => {
 
     var options = {
         method: 'POST',
         url: `${process.env.APIURLPOSTDATA}`,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${tokens.token}`
+          Authorization: `Bearer ${_accToken}`
         },
         data: {
           mallName: _mallName,// `${process.env.mallName}`,
