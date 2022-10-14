@@ -17,11 +17,11 @@ program
     });
 
 program
-    .command('post <store_name> <tx_date> <mall_name> <tenant_name>')
+    .command('post <store_name> <tx_date> <mall_name> <tenant_name> <post_id>')
     .alias('p')
     .description('post tx by store and date')
-    .action((store_name, tx_date, mall_name, tenant_name) => {
-        postDailyTransaction.postDailyTransaction(store_name, new Date(tx_date), mall_name, tenant_name);
+    .action((store_name, tx_date, mall_name, tenant_name, post_id) => {
+        postDailyTransaction.postDailyTransaction(store_name, new Date(tx_date), mall_name, tenant_name, post_id);
     });
 
 program.parse(process.argv);
